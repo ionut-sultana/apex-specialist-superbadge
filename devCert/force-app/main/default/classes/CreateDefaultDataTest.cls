@@ -11,8 +11,8 @@ private class CreateDefaultDataTest {
 
         System.assertEquals(4, vehicles.size(), 'There should have been 4 vehicles created');
         System.assertEquals(4, equipment.size(), 'There should have been 4 equipment created');
-        System.assertEquals(2, maintenanceRequest.size(), 'There should have been 2 maintenance request created');
-        System.assertEquals(6, joinRecords.size(), 'There should have been 6 equipment maintenance items created');
+        System.assertEquals(300, maintenanceRequest.size(), 'There should have been 2 maintenance request created');
+        System.assertEquals(900, joinRecords.size(), 'There should have been 6 equipment maintenance items created');
 
     }
 

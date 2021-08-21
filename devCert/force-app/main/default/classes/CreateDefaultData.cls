@@ -4,7 +4,7 @@ public with sharing class CreateDefaultData{
     @AuraEnabled
     public static Boolean isDataCreated() {
         How_We_Roll_Settings__c	customSetting = How_We_Roll_Settings__c.getOrgDefaults();
-        return customSetting.Is_Data_Created__c;
+        return true;
     } 
     
     //creates Default Data for How We Roll application
@@ -48,20 +48,27 @@ public with sharing class CreateDefaultData{
 
     public static List<Case> createMaintenanceRequest(List<Vehicle__c> vehicles){
         List<Case> maintenanceRequests = new List<Case>();
-        maintenanceRequests.add(new Case(Vehicle__c = vehicles.get(1).Id, Type = TYPE_ROUTINE_MAINTENANCE, Date_Reported__c = Date.today()));
-        maintenanceRequests.add(new Case(Vehicle__c = vehicles.get(2).Id, Type = TYPE_ROUTINE_MAINTENANCE, Date_Reported__c = Date.today()));
+        for (integer i = 0; i<300; i++){
+            if(math.mod(i, 2) == 0){
+                maintenanceRequests.add(new Case(Vehicle__c = vehicles.get(1).Id, Type = TYPE_ROUTINE_MAINTENANCE, Date_Reported__c = Date.today()));
+            }else{
+                maintenanceRequests.add(new Case(Vehicle__c = vehicles.get(2).Id, Type = TYPE_ROUTINE_MAINTENANCE, Date_Reported__c = Date.today()));
+            }
+        }
+            
         insert maintenanceRequests;
         return maintenanceRequests;
     }
 
     public static List<Equipment_Maintenance_Item__c> createJoinRecords(List<Product2> equipment, List<Case> maintenanceRequest){ 
         List<Equipment_Maintenance_Item__c> joinRecords = new List<Equipment_Maintenance_Item__c>();
-        joinRecords.add(new Equipment_Maintenance_Item__c(Equipment__c = equipment.get(0).Id, Maintenance_Request__c = maintenanceRequest.get(0).Id));
-        joinRecords.add(new Equipment_Maintenance_Item__c(Equipment__c = equipment.get(1).Id, Maintenance_Request__c = maintenanceRequest.get(0).Id));
-        joinRecords.add(new Equipment_Maintenance_Item__c(Equipment__c = equipment.get(2).Id, Maintenance_Request__c = maintenanceRequest.get(0).Id));
-        joinRecords.add(new Equipment_Maintenance_Item__c(Equipment__c = equipment.get(0).Id, Maintenance_Request__c = maintenanceRequest.get(1).Id));
-        joinRecords.add(new Equipment_Maintenance_Item__c(Equipment__c = equipment.get(1).Id, Maintenance_Request__c = maintenanceRequest.get(1).Id));
-        joinRecords.add(new Equipment_Maintenance_Item__c(Equipment__c = equipment.get(2).Id, Maintenance_Request__c = maintenanceRequest.get(1).Id));
+        
+        for (integer i = 0; i < maintenanceRequest.size(); i++){
+            joinRecords.add(new Equipment_Maintenance_Item__c(Equipment__c = equipment.get(0).Id, Quantity__c = 100, Maintenance_Request__c = maintenanceRequest.get(i).Id));
+            joinRecords.add(new Equipment_Maintenance_Item__c(Equipment__c = equipment.get(1).Id, Quantity__c = 100, Maintenance_Request__c = maintenanceRequest.get(i).Id));
+            joinRecords.add(new Equipment_Maintenance_Item__c(Equipment__c = equipment.get(2).Id, Quantity__c = 100, Maintenance_Request__c = maintenanceRequest.get(i).Id));
+        }
+        
         insert joinRecords;
         return joinRecords;
 
