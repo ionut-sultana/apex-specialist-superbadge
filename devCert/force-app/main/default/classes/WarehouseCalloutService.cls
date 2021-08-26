@@ -10,8 +10,8 @@ public with sharing class WarehouseCalloutService  implements Queueable  {
         req.setEndpoint(WAREHOUSE_URL);
         req.setMethod('GET');
         HttpResponse res = h.send(req);
-        system.debug(res.getBody());
         WarehouseCalloutService.processWarehouseResponse(res);
+ 
     }
 
     public static void processWarehouseResponse (httpResponse response){
@@ -34,17 +34,7 @@ public with sharing class WarehouseCalloutService  implements Queueable  {
         }
 
         try {
-            Database.UpsertResult[] upsResults = Database.upsert(productList,false);
-            if (upsResults != null){
-                for (Database.UpsertResult result : upsResults) {
-                    if (!result.isSuccess()) {
-                        Database.Error[] errs = result.getErrors();
-                        for(Database.Error err : errs)
-                            System.debug(err.getStatusCode() + ' - ' + err.getMessage());
-        
-                    }
-                }
-            }
+            Database.UpsertResult[] upsResults = Database.upsert(productList,true);
         } catch (Exception e) {
             System.debug(e.getTypeName() + ' - ' + e.getCause() + ': ' + e.getMessage());
         }
